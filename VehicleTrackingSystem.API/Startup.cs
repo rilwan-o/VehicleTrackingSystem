@@ -16,7 +16,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VehicleTrackingSystem.API.Services;
 using VehicleTrackingSystem.Domain.Models;
+using VehicleTrackingSystem.Domain.Repositories;
 
 namespace VehicleTrackingSystem.API
 {
@@ -32,7 +34,7 @@ namespace VehicleTrackingSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -40,6 +42,10 @@ namespace VehicleTrackingSystem.API
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddTransient<IVehicleTractingService, VehicleTractingService>();
 
             services.AddAuthentication(options =>
             {

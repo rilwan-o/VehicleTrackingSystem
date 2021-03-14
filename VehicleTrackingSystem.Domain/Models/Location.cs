@@ -10,7 +10,6 @@ namespace VehicleTrackingSystem.Domain.Models
     {
         public int Id { get; set; }
         public string LocationCordinate { get; set; }
-        public string LocationName { get; set; }
         public DateTime DateTime { get; set; }
         public int VehicleId { get; set; }
     }

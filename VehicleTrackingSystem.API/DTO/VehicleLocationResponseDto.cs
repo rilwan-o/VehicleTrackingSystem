@@ -6,9 +6,9 @@ using VehicleTrackingSystem.Domain.Models;
 
 namespace VehicleTrackingSystem.API.DTO
 {
-    public class VehicleLocationDto
+    public class VehicleLocationResponseDto
     {
-        public LatLonPoint LatLonPoint { get; set; }
-        public string TrackingId { get; set; }
+        public LatLonPoint LocationCordinate { get; set; }
+        public string LocationName { get; set; }
     }
 }
