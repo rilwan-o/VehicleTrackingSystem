@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using VehicleTrackingSystem.API.DTO;
+using VehicleTrackingSystem.API.Enumerations;
 using VehicleTrackingSystem.Domain.Models;
 
 namespace VehicleTrackingSystem.API.Controllers
@@ -32,11 +33,17 @@ namespace VehicleTrackingSystem.API.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            if (!ModelState.IsValid) return BadRequest(model);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
                 var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return BadRequest(new ApiResponse { Code = "02", Description = "User already exists!" });
-
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Code = ResponseEnum.DuplicateUser.ResponseCode(),
+                    Description = ResponseEnum.DuplicateUser.DisplayName()
+                });
+            }
+               
             ApplicationUser user = new ApplicationUser()
             {
                 Email = model.Email,
@@ -45,10 +52,15 @@ namespace VehicleTrackingSystem.API.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return BadRequest( new ApiResponse { Code = "96", Description = "User creation failed! Please check user details and try again. Password must contain Uppercase, lowercase, special characters" });
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Code = ResponseEnum.UserCreationFailed.ResponseCode(),
+                    Description = ResponseEnum.UserCreationFailed.DisplayName()
+                });
+            }
+                
 
-            //if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            //    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             if (!await _roleManager.RoleExistsAsync(UserRoles.User))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
@@ -57,7 +69,9 @@ namespace VehicleTrackingSystem.API.Controllers
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             }
 
-            return Ok(new ApiResponse { Code = "00", Description = "User created successfully!" });
+            return Ok(new ApiResponse { Code = ResponseEnum.ApprovedOrCompletedSuccesfully.ResponseCode(), 
+                Description = ResponseEnum.ApprovedOrCompletedSuccesfully.DisplayName() 
+            });
         }
 
 
@@ -65,7 +79,7 @@ namespace VehicleTrackingSystem.API.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
-            if (!ModelState.IsValid) return BadRequest(model);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = await _userManager.FindByNameAsync(model.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
@@ -100,7 +114,8 @@ namespace VehicleTrackingSystem.API.Controllers
                     expiration = token.ValidTo
                 });
             }
-            return BadRequest(new ApiResponse {Code="02", Description="Invalid Username or password"});
+            return BadRequest(new ApiResponse {Code=ResponseEnum.UserLoginFailed.ResponseCode(),
+                Description= ResponseEnum.UserLoginFailed.DisplayName()});
         }
 
        
@@ -112,7 +127,10 @@ namespace VehicleTrackingSystem.API.Controllers
 
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return BadRequest( new ApiResponse { Code = "02", Description = "User already exists!" });
+            {
+                return BadRequest(new ApiResponse{Code = ResponseEnum.DuplicateUser.ResponseCode(), Description = ResponseEnum.DuplicateUser.DisplayName() });
+
+            }
 
             ApplicationUser user = new ApplicationUser()
             {
@@ -122,7 +140,11 @@ namespace VehicleTrackingSystem.API.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return BadRequest(new ApiResponse { Code = "96", Description = "User creation failed! Please check user details and try again." });
+            {
+                return BadRequest(new ApiResponse { Code = ResponseEnum.UserCreationFailed.ResponseCode(), 
+                    Description = ResponseEnum.UserCreationFailed.DisplayName() });
+
+            }
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
@@ -134,7 +156,8 @@ namespace VehicleTrackingSystem.API.Controllers
                 await _userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
-            return Ok(new ApiResponse { Code = "Success", Description = "User created successfully!" });
+            return Ok(new ApiResponse { Code = ResponseEnum.ApprovedOrCompletedSuccesfully.ResponseCode(), 
+                Description = ResponseEnum.ApprovedOrCompletedSuccesfully.DisplayName() });
         }
     }
 }
