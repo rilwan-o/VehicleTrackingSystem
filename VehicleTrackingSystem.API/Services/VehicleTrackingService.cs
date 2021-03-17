@@ -66,12 +66,13 @@ namespace VehicleTrackingSystem.API.Services
         public async Task<IEnumerable<VehicleLocationResponseDto>> GetVehicleLocations(int vehicleId, DateTime From, DateTime To)
         {
             List<VehicleLocationResponseDto> vehicleLocationResponseDtos = new List<VehicleLocationResponseDto>();
-            var locations =  await _locationRepository.GetVehicleLocations(vehicleId, From, To);
-            Parallel.ForEach(locations, async location =>
+            var vlocations =  await _locationRepository.GetVehicleLocations(vehicleId, From, To);
+
+            foreach(var vlocation in vlocations)
             {
-                var vlocationDto = await GetVehicleLocation(location.VehicleId);
+                var vlocationDto = await GetVehicleLocation(vlocation.VehicleId);
                 vehicleLocationResponseDtos.Add(vlocationDto);
-            });
+            }
 
             return vehicleLocationResponseDtos;
         }

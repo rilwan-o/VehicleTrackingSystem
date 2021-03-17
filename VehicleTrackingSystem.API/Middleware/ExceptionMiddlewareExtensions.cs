@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using VehicleTrackingSystem.API.DTO;
+using VehicleTrackingSystem.API.Enumerations;
 
 namespace VehicleTrackingSystem.API.Middleware
 {
@@ -26,8 +27,8 @@ namespace VehicleTrackingSystem.API.Middleware
                         //logger.LogError($"Something went wrong: {contextFeature.Error}");
                         await context.Response.WriteAsync(new ApiResponse()
                         {
-                            Code = context.Response.StatusCode.ToString(),
-                            Description = "Internal Server Error."
+                            Code = ResponseEnum.SystemMalfunction.ResponseCode(),
+                            Description = ResponseEnum.SystemMalfunction.DisplayName()
                         }.ToString());
                     }
                 });
