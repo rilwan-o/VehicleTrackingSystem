@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VehicleTrackingSystem.API.DTO
+namespace VehicleTrackingSystem.Domain.DTO
 {
     public class LoginDto
     {

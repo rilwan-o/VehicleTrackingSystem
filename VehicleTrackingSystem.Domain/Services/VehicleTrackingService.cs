@@ -1,29 +1,29 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VehicleTrackingSystem.API.DTO;
+using VehicleTrackingSystem.Domain.DTO;
 using VehicleTrackingSystem.Domain.Models;
 using VehicleTrackingSystem.Domain.Repositories;
 
-namespace VehicleTrackingSystem.API.Services
+namespace VehicleTrackingSystem.Domain.Services
 {
     public class VehicleTrackingService : IVehicleTrackingService
     {
         private readonly IVehicleRepository _vehicleRepository;
         private readonly ILocationRepository _locationRepository;
-        private readonly IConfiguration _configuration;
+        private readonly AppSettings _appSettings;
         private readonly IMapper _mapper;
         private readonly IHttpClientFactory _clientFactory;
-        public VehicleTrackingService(IVehicleRepository vehicleRepository, ILocationRepository locationRepository, IMapper mapper, IConfiguration configuration, IHttpClientFactory clientFactory) 
+        public VehicleTrackingService(IVehicleRepository vehicleRepository, ILocationRepository locationRepository, IMapper mapper, IOptions<AppSettings> appSettings, IHttpClientFactory clientFactory) 
         { 
             _vehicleRepository = vehicleRepository;
             _locationRepository = locationRepository;
             _mapper = mapper;
-            _configuration = configuration;
+            _appSettings = appSettings.Value;
             _clientFactory = clientFactory;
         }
         public async Task AddVehiclePosition(VehicleLocationDto vehicleLocation, int id)
@@ -82,7 +82,7 @@ namespace VehicleTrackingSystem.API.Services
             var vehicle = _mapper.Map<VehicleRegisterDto, Vehicle>(vehicleDto);
             vehicle.UserId = id;
             vehicle.TrackingId = Guid.NewGuid().ToString();
-            vehicle.Status = _configuration["Vehicle:Status"];
+            vehicle.Status = _appSettings.VehicleSettings.Status;
             vehicle.DateRegistered = DateTime.Now;
 
             return await _vehicleRepository.AddVehicle(vehicle);
@@ -96,7 +96,7 @@ namespace VehicleTrackingSystem.API.Services
         private async Task<string> GetLocationName(LatLonPoint latlong)
         {
             string name;
-            var url = $"{_configuration["Vehicle:GoogleMapUrl"]}latlng={latlong.Latitude},{latlong.Longitiude}&key={_configuration["Vehicle:Key"]}";
+            var url = $"{_appSettings.VehicleSettings.GoogleMapUrl}latlng={latlong.Latitude},{latlong.Longitiude}&key={_appSettings.VehicleSettings.Key}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("Accept", "application/json");
 

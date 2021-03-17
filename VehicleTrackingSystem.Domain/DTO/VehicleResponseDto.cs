@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VehicleTrackingSystem.API.DTO
+namespace VehicleTrackingSystem.Domain.DTO
 {
     public class VehicleResponseDto
     { 

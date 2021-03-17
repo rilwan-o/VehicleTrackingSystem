@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.Linq;
-using VehicleTrackingSystem.API.DTO;
+using VehicleTrackingSystem.Domain.DTO;
 
 namespace VehicleTrackingSystem.API.Extensions
 {

@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace VehicleTrackingSystem.API.Entities
+namespace VehicleTrackingSystem.Domain.Entities
 {
     [Table("ErrorLogs")]
     public class ErrorLogs

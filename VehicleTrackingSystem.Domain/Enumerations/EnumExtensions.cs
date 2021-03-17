@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace VehicleTrackingSystem.API.Enumerations
+namespace VehicleTrackingSystem.Domain.Enumerations
 {
     public static class EnumExtensions
     {

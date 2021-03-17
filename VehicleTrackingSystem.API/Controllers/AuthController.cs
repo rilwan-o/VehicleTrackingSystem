@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using VehicleTrackingSystem.API.DTO;
-using VehicleTrackingSystem.API.Enumerations;
+using VehicleTrackingSystem.Domain.DTO;
+using VehicleTrackingSystem.Domain.Enumerations;
 using VehicleTrackingSystem.Domain.Models;
+using VehicleTrackingSystem.Domain.Services;
 
 namespace VehicleTrackingSystem.API.Controllers
 {
@@ -20,17 +18,17 @@ namespace VehicleTrackingSystem.API.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
+        private readonly IJwtService _jwtService;
 
-        public AuthController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IJwtService jwtService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _configuration = configuration;
+            _jwtService = jwtService;
         }
 
         [HttpPost]
-        [Route("register")]
+        [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -76,7 +74,7 @@ namespace VehicleTrackingSystem.API.Controllers
 
 
         [HttpPost]
-        [Route("login")]
+        [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -98,21 +96,8 @@ namespace VehicleTrackingSystem.API.Controllers
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-                int expiryInMinutes = Convert.ToInt32(_configuration["JWT:ExpiryInMinutes"]);
-                var token = new JwtSecurityToken(
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddMinutes(expiryInMinutes),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                return Ok(_jwtService.GenerateSecurityToken(authClaims));
+   
             }
             return BadRequest(new ApiResponse {Code=ResponseEnum.UserLoginFailed.ResponseCode(),
                 Description= ResponseEnum.UserLoginFailed.DisplayName()});
@@ -120,7 +105,7 @@ namespace VehicleTrackingSystem.API.Controllers
 
        
         [HttpPost]
-        [Route("register-admin")]
+        [Route("RegisterAdmin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid) return BadRequest(model);

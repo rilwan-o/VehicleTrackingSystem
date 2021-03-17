@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Serilog;
-using System;
 using System.Net;
-using VehicleTrackingSystem.API.DTO;
-using VehicleTrackingSystem.API.Enumerations;
 
 namespace VehicleTrackingSystem.API.Middleware
 {

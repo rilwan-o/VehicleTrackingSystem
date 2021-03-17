@@ -1,4 +1,4 @@
-﻿namespace VehicleTrackingSystem.API.Enumerations
+﻿namespace VehicleTrackingSystem.Domain.Enumerations
 {
     public enum ResponseEnum
     {

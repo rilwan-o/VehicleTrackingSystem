@@ -15,9 +15,10 @@ using System;
 using System.Text;
 using VehicleTrackingSystem.API.Extensions;
 using VehicleTrackingSystem.API.Middleware;
-using VehicleTrackingSystem.API.Services;
+using VehicleTrackingSystem.Domain.Services;
 using VehicleTrackingSystem.Domain.Models;
 using VehicleTrackingSystem.Domain.Repositories;
+using AutoMapper;
 
 namespace VehicleTrackingSystem.API
 {
@@ -33,20 +34,24 @@ namespace VehicleTrackingSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.ConfigureCors();
             services.ConfigureIISIntegration();
-            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddHttpClient();
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddTransient<IVehicleTrackingService, VehicleTrackingService>();
+
             services.AddControllers()
                  .ConfigureApiBehaviorOptions(options =>
                  {
@@ -102,6 +107,10 @@ namespace VehicleTrackingSystem.API
                     }
                 });
             });
+
+            services.AddSingleton<IJwtService, JwtService>();
+            services.AddAutoMapper(typeof(Startup));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

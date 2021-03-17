@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Serilog;
 using System.IO;
 using System.Threading.Tasks;
-using VehicleTrackingSystem.API.DTO;
+using VehicleTrackingSystem.Domain.DTO;
 
 namespace VehicleTrackingSystem.API.Extensions
 {

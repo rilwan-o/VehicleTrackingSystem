@@ -1,25 +1,22 @@
-﻿using VehicleTrackingSystem.API.Extensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VehicleTrackingSystem.Domain.Models;
 
 namespace VehicleTrackingSystem.API.Extensions
 {
     public class RequestResponseLoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IConfiguration _configuration;
+        private readonly AppSettings _appSettings;
 
-        public RequestResponseLoggingMiddleware(RequestDelegate next, IConfiguration configuration)
+        public RequestResponseLoggingMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
         {
             _next = next;
-            _configuration = configuration;
+            _appSettings = appSettings.Value;
         }
 
         public async Task Invoke(HttpContext context)
@@ -28,7 +25,7 @@ namespace VehicleTrackingSystem.API.Extensions
             string requestBodyPayload = await ReadRequestBody(context.Request);
 
             //check for password and ommit
-            var ignoreGroups = _configuration["DatabaseSecureLogGroups"];
+            var ignoreGroups = _appSettings.DatabaseSecureLogGroups;
             var grpSplit = ignoreGroups.Split("|");
             foreach (var item in grpSplit)
             {

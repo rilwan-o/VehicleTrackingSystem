@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using VehicleTrackingSystem.API.DTO;
-using VehicleTrackingSystem.API.Enumerations;
-using VehicleTrackingSystem.API.Services;
+using VehicleTrackingSystem.Domain.DTO;
+using VehicleTrackingSystem.Domain.Enumerations;
+using VehicleTrackingSystem.Domain.Services;
 using VehicleTrackingSystem.Domain.Models;
 
 namespace VehicleTrackingSystem.API.Controllers
@@ -23,7 +23,7 @@ namespace VehicleTrackingSystem.API.Controllers
 
         [Authorize(Roles = "User, Admin")]
         [HttpPost]
-        [Route("register-vehicle")]
+        [Route("Register")]
         public async Task<IActionResult> RegisterVehicle([FromBody] VehicleRegisterDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -59,7 +59,7 @@ namespace VehicleTrackingSystem.API.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPost]
-        [Route("record-vehicle-position")]
+        [Route("Position/Add")]
         public async Task<IActionResult> AddVehiclePosition([FromBody] VehicleLocationDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -87,7 +87,7 @@ namespace VehicleTrackingSystem.API.Controllers
         }       
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("get-current-vehicle-position/{trackingId}")]
+        [HttpGet("Position/{trackingId}")]
         public async Task<IActionResult> GetCurrentVehiclePosition(string trackingId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -114,7 +114,7 @@ namespace VehicleTrackingSystem.API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        [Route("get-vehicle-positions")]
+        [Route("Position/All")]
         public async Task<IActionResult> GetVehiclePositions([FromBody]VehiclePositionsDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

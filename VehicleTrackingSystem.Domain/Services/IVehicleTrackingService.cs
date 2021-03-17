@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VehicleTrackingSystem.API.DTO;
+using VehicleTrackingSystem.Domain.DTO;
 using VehicleTrackingSystem.Domain.Models;
 
-namespace VehicleTrackingSystem.API.Services
+namespace VehicleTrackingSystem.Domain.Services
 {
     public interface IVehicleTrackingService
     {
