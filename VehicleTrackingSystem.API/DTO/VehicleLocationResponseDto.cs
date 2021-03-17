@@ -10,5 +10,6 @@ namespace VehicleTrackingSystem.API.DTO
     {
         public LatLonPoint LocationCordinate { get; set; }
         public string LocationName { get; set; }
+        public DateTime Datetime { get; set; }
     }
 }

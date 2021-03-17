@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Contracts\Services\" />
-    <Folder Include="Middleware\" />
   </ItemGroup>
 
   <ItemGroup>

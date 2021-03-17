@@ -225,10 +225,7 @@ namespace VehicleTrackingSystem.Domain.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LocationCordinate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationName")
+                    b.Property<string>("LocationCordinates")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("VehicleId")
@@ -268,14 +265,13 @@ namespace VehicleTrackingSystem.Domain.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrackingId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Year")
                         .HasColumnType("datetime2");

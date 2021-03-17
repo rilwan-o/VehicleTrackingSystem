@@ -10,8 +10,8 @@ using VehicleTrackingSystem.Domain.Models;
 namespace VehicleTrackingSystem.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210314125423_AddedUserId")]
-    partial class AddedUserId
+    [Migration("20210315201751_NewDb")]
+    partial class NewDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -227,10 +227,7 @@ namespace VehicleTrackingSystem.Domain.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LocationCordinate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationName")
+                    b.Property<string>("LocationCordinates")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("VehicleId")
@@ -260,14 +257,23 @@ namespace VehicleTrackingSystem.Domain.Migrations
                     b.Property<DateTime>("DateRegistered")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateUnRegistered")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrackingId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Year")
                         .HasColumnType("datetime2");

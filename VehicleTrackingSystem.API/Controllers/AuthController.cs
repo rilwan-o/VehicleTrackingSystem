@@ -34,7 +34,8 @@ namespace VehicleTrackingSystem.API.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
+            if (!ModelState.IsValid) return BadRequest(model);
+                var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return BadRequest(new ApiResponse { Code = "02", Description = "User already exists!" });
 
@@ -46,7 +47,17 @@ namespace VehicleTrackingSystem.API.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Code = "96", Description = "User creation failed! Please check user details and try again. Password must contain Uppercase, lowercase, special characters, minimum length of 8" });
+                return BadRequest( new ApiResponse { Code = "96", Description = "User creation failed! Please check user details and try again. Password must contain Uppercase, lowercase, special characters" });
+
+            //if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            //    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.User))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+            }
 
             return Ok(new ApiResponse { Code = "00", Description = "User created successfully!" });
         }
@@ -56,6 +67,8 @@ namespace VehicleTrackingSystem.API.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
+            if (!ModelState.IsValid) return BadRequest(model);
+
             var user = await _userManager.FindByNameAsync(model.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
@@ -65,6 +78,7 @@ namespace VehicleTrackingSystem.API.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id)
                 };
 
                 foreach (var userRole in userRoles)
@@ -88,7 +102,7 @@ namespace VehicleTrackingSystem.API.Controllers
                     expiration = token.ValidTo
                 });
             }
-            return Unauthorized();
+            return BadRequest(new ApiResponse {Code="02", Description="Invalid Username or password"});
         }
 
        
@@ -96,6 +110,8 @@ namespace VehicleTrackingSystem.API.Controllers
         [Route("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto model)
         {
+            if (!ModelState.IsValid) return BadRequest(model);
+
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return BadRequest( new ApiResponse { Code = "02", Description = "User already exists!" });
@@ -108,7 +124,7 @@ namespace VehicleTrackingSystem.API.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Code = "96", Description = "User creation failed! Please check user details and try again." });
+                return BadRequest(new ApiResponse { Code = "96", Description = "User creation failed! Please check user details and try again." });
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));

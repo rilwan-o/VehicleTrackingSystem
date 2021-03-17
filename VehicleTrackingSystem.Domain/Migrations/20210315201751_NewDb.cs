@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VehicleTrackingSystem.Domain.Migrations
 {
-    public partial class Initial : Migration
+    public partial class NewDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +12,8 @@ namespace VehicleTrackingSystem.Domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -26,10 +26,10 @@ namespace VehicleTrackingSystem.Domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -52,8 +52,7 @@ namespace VehicleTrackingSystem.Domain.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LocationCordinate = table.Column<string>(type: "nvarchar(20)", nullable: true),
-                    LocationName = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LocationCordinates = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     VehicleId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -68,13 +67,17 @@ namespace VehicleTrackingSystem.Domain.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TrackingId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Brand = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    ChasisNumber = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    Color = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    Model = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Brand = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChasisNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Model = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Year = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateRegistered = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateRegistered = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUnRegistered = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -29,8 +29,29 @@ namespace VehicleTrackingSystem.Domain.Repositories
 
         public async Task<IEnumerable<Location>> GetVehicleLocations(int vehicleId, DateTime From, DateTime To)
         {
-            return await _dbContext.Locations.Where(v => v.VehicleId == vehicleId && v.DateTime > From && v.DateTime < To)
+           // List<Location> locations ;
+
+            //if (From == null && To != null)
+            //{
+            //    locations =  await _dbContext.Locations.Where(v => v.VehicleId == vehicleId && v.DateTime <= To)
+            //                                    .OrderByDescending(v => v.DateTime).ToListAsync();
+            //}
+            //else if (From != null && To == null)
+            //{
+            //    locations =  await _dbContext.Locations.Where(v => v.VehicleId == vehicleId && v.DateTime >= From)
+            //                                    .OrderByDescending(v => v.DateTime).ToListAsync();
+            //}
+            //else if (From == null && To == null)
+            //{
+            //    locations = await _dbContext.Locations.Where(v => v.VehicleId == vehicleId)
+            //                                    .OrderByDescending(v => v.DateTime).ToListAsync();
+            //}
+            //else {
+             var   locations = await _dbContext.Locations.Where(v => v.VehicleId == vehicleId && v.DateTime >= From && v.DateTime <= To)
                                                 .OrderByDescending(v => v.DateTime).ToListAsync();
+            //}
+
+            return locations;
         }
     }
 }

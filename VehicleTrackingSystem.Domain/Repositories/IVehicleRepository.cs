@@ -10,9 +10,9 @@ namespace VehicleTrackingSystem.Domain.Repositories
 {
     public interface IVehicleRepository
     {
-        Task AddVehicle(Vehicle vehicle);
+        Task<string> AddVehicle(Vehicle vehicle);
         Task<Vehicle> GetVehicleByTrackingId(string trackingId);
-        Task <bool> VehicleExists(string chasis);
+        Task <bool> VehicleExists(string brand, string chasis);
      
     }
 }

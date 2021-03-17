@@ -21,9 +21,9 @@ namespace VehicleTrackingSystem.Domain.Repositories
             _configuration = configuration;
         }
 
-        public async Task<bool> VehicleExists(string chasis)
+        public async Task<bool> VehicleExists(string brand, string chasis)
         {
-            var existingVehicle = await _dbContext.Vehicles.FirstOrDefaultAsync(v => v.ChasisNumber == chasis && v.Status == _configuration["Vehicle:Status"]);
+            var existingVehicle = await _dbContext.Vehicles.FirstOrDefaultAsync(v => v.ChasisNumber == chasis && v.Brand ==brand && v.Status == _configuration["Vehicle:Status"]);
             return existingVehicle == null;
         }
         public async Task<Vehicle> GetVehicleByTrackingId(string trackingId)
@@ -31,10 +31,11 @@ namespace VehicleTrackingSystem.Domain.Repositories
             var vehicle = await _dbContext.Vehicles.FirstOrDefaultAsync(v => v.TrackingId == trackingId);
             return vehicle;
         }
-        public async Task AddVehicle(Vehicle vehicle)
+        public async Task<string> AddVehicle(Vehicle vehicle)
         {
             await _dbContext.Vehicles.AddAsync(vehicle);
             await _dbContext.SaveChangesAsync();
+            return vehicle.TrackingId;
         }
     }
 }
