@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AccountManagement.API.Entities
+namespace VehicleTrackingSystem.API.Entities
 {
     [Table("AuditLogs")]
 	public class AuditLog
