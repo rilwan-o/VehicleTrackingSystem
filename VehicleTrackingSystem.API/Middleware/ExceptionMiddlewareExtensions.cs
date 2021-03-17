@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 using System;
 using System.Net;
 using VehicleTrackingSystem.API.DTO;
@@ -21,11 +22,10 @@ namespace VehicleTrackingSystem.API.Middleware
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if (contextFeature != null)
                     {
-                        //logger.LogError($"Something went wrong: {contextFeature.Error}");
-                        await context.Response.WriteAsync(new ApiResponse()
+                        await context.Response.WriteAsync(new ErrorDetails
                         {
-                            Code = ResponseEnum.SystemMalfunction.ResponseCode(),
-                            Description = ResponseEnum.SystemMalfunction.DisplayName()
+                            StatusCode = context.Response.StatusCode,
+                            Message = "System error."
                         }.ToString());
                     }
                 });

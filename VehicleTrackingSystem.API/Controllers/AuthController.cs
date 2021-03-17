@@ -80,7 +80,7 @@ namespace VehicleTrackingSystem.API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
+            
             var user = await _userManager.FindByNameAsync(model.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {

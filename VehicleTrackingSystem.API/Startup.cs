@@ -7,11 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System;
 using System.Text;
 using VehicleTrackingSystem.API.Extensions;
+using VehicleTrackingSystem.API.Middleware;
 using VehicleTrackingSystem.API.Services;
 using VehicleTrackingSystem.Domain.Models;
 using VehicleTrackingSystem.Domain.Repositories;
@@ -44,7 +47,13 @@ namespace VehicleTrackingSystem.API
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddTransient<IVehicleTrackingService, VehicleTrackingService>();
+            services.AddControllers()
+                 .ConfigureApiBehaviorOptions(options =>
+                 {
 
+                     options.SuppressModelStateInvalidFilter = true;
+
+                 });
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -96,7 +105,7 @@ namespace VehicleTrackingSystem.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -106,18 +115,23 @@ namespace VehicleTrackingSystem.API
             }
 
             app.UseHttpsRedirection();
-
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
             app.UseCors("CorsPolicy");
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
 
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+            app.UseSerilogRequestLogging(opts => opts.EnrichDiagnosticContext = LogHelper.EnrichFromRequest);
+            loggerFactory.AddSerilog();
+
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.ConfigureExceptionHandler();
 
             app.UseEndpoints(endpoints =>
             {
