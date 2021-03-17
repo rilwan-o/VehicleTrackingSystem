@@ -75,7 +75,8 @@ namespace VehicleTrackingSystem.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var vehicle = await _vehicleTrackingService.GetVehicleByTrackingId(model.TrackingId);
+            Vehicle vehicle = await GetVehicle(model.TrackingId);
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId != vehicle.UserId) return StatusCode(403);
@@ -91,17 +92,18 @@ namespace VehicleTrackingSystem.API.Controllers
             await _vehicleTrackingService.AddVehiclePosition(model, vehicle.Id);
             return Ok(new ApiResponse
             {
-                Code = ResponseEnum.ApprovedOrCompletedSuccesfully.ResponseCode(), 
+                Code = ResponseEnum.ApprovedOrCompletedSuccesfully.ResponseCode(),
                 Description = ResponseEnum.ApprovedOrCompletedSuccesfully.DisplayName()
             });
-        }
+        }       
 
         [Authorize(Roles = "Admin")]
         [HttpGet("get-current-vehicle-position/{trackingId}")]
         public async Task<IActionResult> GetCurrentVehiclePosition(string trackingId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var vehicle = await _vehicleTrackingService.GetVehicleByTrackingId(trackingId.Trim());
+
+            var vehicle = await GetVehicle(trackingId);
 
             if (vehicle == null)
             {
@@ -127,7 +129,8 @@ namespace VehicleTrackingSystem.API.Controllers
         public async Task<IActionResult> GetVehiclePositions([FromBody]VehiclePositionsDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var vehicle = await _vehicleTrackingService.GetVehicleByTrackingId(model.TrackingId.Trim());
+
+            var vehicle = await GetVehicle(model.TrackingId);
 
             if (vehicle == null)
             {
@@ -145,6 +148,11 @@ namespace VehicleTrackingSystem.API.Controllers
                 Description = ResponseEnum.ApprovedOrCompletedSuccesfully.DisplayName(),
                 Data = locations
             });
+        }
+
+        private async Task<Vehicle> GetVehicle(string trackingId)
+        {
+            return await _vehicleTrackingService.GetVehicleByTrackingId(trackingId.Trim());
         }
 
     }
