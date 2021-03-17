@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using VehicleTrackingSystem.API.DTO;
@@ -19,16 +14,10 @@ namespace VehicleTrackingSystem.API.Controllers
     [ApiController]
     public class VehiclesController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
         private readonly IVehicleTrackingService _vehicleTrackingService;
 
-        public VehiclesController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IVehicleTrackingService vehicleTrackingService)
+        public VehiclesController(IVehicleTrackingService vehicleTrackingService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
             _vehicleTrackingService = vehicleTrackingService;
         }
 
