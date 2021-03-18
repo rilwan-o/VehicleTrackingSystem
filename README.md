@@ -26,7 +26,7 @@
 7. The token is what will be used for further access to the endpoints with an expiry lifespan of 60 minutes. This can be achieved by 
   using the authorize button at the top right hand corner and passing in the token.
   
-8. According TO the task, only the admin can check the location/locations of a vehicle
+8. According to the task, only the admin can check the location/locations of a vehicle
 9. The user can only register the vehicle and post the vehicle location 
 
 10. If there is a need to add more properties to the request dto, 
