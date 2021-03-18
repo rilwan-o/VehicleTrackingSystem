@@ -6,7 +6,9 @@
  ORM: Entityframework
  Logging : Serilog
  Authentication: JWT
-1. Ensure the environment where the project would be run has sql installed.
+1. Ensure the environment where the project would be run has sql installed. 
+   If the sql db to be used needs login access, place the following in the DefaultConnection value section of the appsettings.json file, 
+   and fill accordingly : User ID={the db user id};Password={the db password };
 2. Build the application with visual studio or visual studio code.
 3. Open the Package manager console in visual studio and run migration:
   1. Add-Migration InitialMigration
