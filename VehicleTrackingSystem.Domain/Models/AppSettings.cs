@@ -23,7 +23,7 @@ namespace VehicleTrackingSystem.Domain.Models
 
     public class VehicleSettings
     {
-        public string Status { get; set; }
+        public string ActiveStatus { get; set; }
         public string GoogleMapUrl { get; set; }
         public string Key { get; set; }
     }

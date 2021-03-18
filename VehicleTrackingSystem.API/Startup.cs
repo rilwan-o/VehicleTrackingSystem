@@ -50,7 +50,7 @@ namespace VehicleTrackingSystem.API
             
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
-            services.AddTransient<IVehicleTrackingService, VehicleTrackingService>();
+            services.AddScoped<IVehicleTrackingService, VehicleTrackingService>();
 
             services.AddControllers()
                  .ConfigureApiBehaviorOptions(options =>

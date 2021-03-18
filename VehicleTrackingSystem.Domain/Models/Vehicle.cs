@@ -14,8 +14,8 @@ namespace VehicleTrackingSystem.Domain.Models
         public DateTime Year { get; set; }
         public string Status { get; set; }
         public DateTime DateRegistered { get; set; }
-        public DateTime DateUnRegistered { get; set; }
-        public DateTime DateUpdated{ get; set; }
+        public DateTime? DateUnRegistered { get; set; } = null;
+        public DateTime? DateUpdated { get; set; } = null;
 
     }
 }

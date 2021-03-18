@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 using VehicleTrackingSystem.Domain.Models;
 
@@ -8,17 +9,17 @@ namespace VehicleTrackingSystem.Domain.Repositories
     public class VehicleRepository : IVehicleRepository
     {
         public readonly ApplicationDbContext _dbContext;
-        private readonly IConfiguration _configuration;
+        private readonly AppSettings _appSettings;
 
-        public VehicleRepository(ApplicationDbContext dbContext, IConfiguration configuration)
+        public VehicleRepository(ApplicationDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;
-            _configuration = configuration;
+            _appSettings = appSettings.Value;
         }
 
         public async Task<bool> VehicleExists(string brand, string chasis)
         {
-            var existingVehicle = await _dbContext.Vehicles.FirstOrDefaultAsync(v => v.ChasisNumber == chasis && v.Brand ==brand && v.Status == _configuration["Vehicle:Status"]);
+            var existingVehicle = await _dbContext.Vehicles.FirstOrDefaultAsync(v => v.ChasisNumber == chasis && v.Brand ==brand && v.Status == _appSettings.VehicleSettings.ActiveStatus);
             return existingVehicle == null;
         }
         public async Task<Vehicle> GetVehicleByTrackingId(string trackingId)

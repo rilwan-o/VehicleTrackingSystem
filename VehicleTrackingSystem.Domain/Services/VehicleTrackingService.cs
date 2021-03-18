@@ -82,7 +82,7 @@ namespace VehicleTrackingSystem.Domain.Services
             var vehicle = _mapper.Map<VehicleRegisterDto, Vehicle>(vehicleDto);
             vehicle.UserId = id;
             vehicle.TrackingId = Guid.NewGuid().ToString();
-            vehicle.Status = _appSettings.VehicleSettings.Status;
+            vehicle.Status = _appSettings.VehicleSettings.ActiveStatus;
             vehicle.DateRegistered = DateTime.Now;
 
             return await _vehicleRepository.AddVehicle(vehicle);
