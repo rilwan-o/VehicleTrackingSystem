@@ -15,12 +15,13 @@
 5. When the application is launched, a swagger page comes up.
 - /api/Auth/v1/Register - is used for user registration or onboarding
 - /api/Auth/v1/RegisterAdmin - is for Administrator registration
--. /api/Auth/v1/Login - the login for both user and administrator
+- /api/Auth/v1/Login - the login for both user and administrator
 - /api/Vehicles/v1/Register - used by the user to register thier vehicle details
--/api/Vehicles/v1/{trackid} - used by the user to get the registered vehicle details
--/api/Vehicles/v1/Position/Add - for posting vehicle position
--/api/Vehicles/v1/Position/{trackingId} - used by admin for getting the position of a vehicle
--/api/Vehicles/v1/Position/All - used by admin for getting the positions of a vehicle within a particualr date/time range
+- /api/Vehicles/v1/{trackid} - used by the user to get the registered vehicle details
+- /api/Vehicles/v1/Position/Add - for posting vehicle position
+- /api/Vehicles/v1/Position/{trackingId} - used by admin for getting the position of a vehicle
+- /api/Vehicles/v1/Position/All - used by admin for getting the positions of a vehicle within a particualr date/time range
+
 6. When a registered user/admin logs in, a token is generated.
 7. The token is what will be used for further access to the endpoints with an expiry lifespan of 60 minutes. This can be achieved by 
   using the authorize button at the top right hand corner and passing in the token.
